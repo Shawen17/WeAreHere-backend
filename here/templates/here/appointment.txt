@@ -1,0 +1,18 @@
+{% autoescape off %} 
+
+Hi team,
+
+ Mr/Mrs {{ full_name }}, 
+
+with email {{ customer_email }} and phone number {{ phone_number }}
+
+has booked for {{ service}} service at the address below;
+
+{{ address }}
+
+{{ state }}
+
+kindly follow up,
+
+  
+{% endautoescape %}
