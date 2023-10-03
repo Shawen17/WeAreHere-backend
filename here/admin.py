@@ -1,11 +1,9 @@
 from django.contrib import admin
-from .models import User,ServiceCharge,RealEstate,RealEstateImage,Appointment,Transaction, RealEstateBooking
+from .models import User,ServiceCharge,RealEstate,RealEstateImage,Appointment,Transaction, RealEstateBooking, Subscription, Charge,Contactus
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-# from .forms import MultiImageForm
 
-# Register your models here.
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
@@ -80,3 +78,19 @@ class TransactionAdmin(ModelAdmin):
 @admin.register(RealEstateBooking)
 class RealEstateBookingAdmin(ModelAdmin):
     list_display=('agent','business_name','customer_email','customer_phone','apartment','location','state','is_meeting_scheduled','schedule_date','agreement_made')
+
+
+@admin.register(Subscription)
+class SubscriptionAdmin(ModelAdmin):
+    list_display=('ref','made_by','amount','bundle','start_date','end_date')
+
+
+@admin.register(Charge)
+class ChargeAdmin(ModelAdmin):
+    list_display=('name','charge')
+
+
+
+@admin.register(Contactus)
+class ContactusAdmin(ModelAdmin):
+    list_display=('full_name','email','message')

@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
-from .models import User,Appointment,Transaction,RealEstate,RealEstateBooking
-from .serializers import UserCreateSerializer,AppointmentSerializer,RealEstateSerializer,RealEstateBookingSerializer
+from .models import User,Appointment,Transaction,RealEstate,RealEstateBooking, Charge, Subscription, Contactus
+from .serializers import UserCreateSerializer,AppointmentSerializer,RealEstateSerializer,RealEstateBookingSerializer, ChargeSerializer
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django import template
@@ -54,6 +54,7 @@ def make_appointment(request):
         html_content = htmltemp.render(c)
         subject = 'New Appointment Booked'  
         msg = text_content
+        #recipient mail correction
         to = user.email
         send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
 
@@ -76,35 +77,17 @@ def add_property(request):
     
     updateable_field={key: value for key, value in data.items() if key != 'email' and key!='facility' }
     facility_fields = {key: value for key, value in data.items() if key == 'facility'}
+    new_data={key: value for key, value in updateable_field.items() if value!='undefined' }
     user = User.objects.get(email=data['email'])
     if request.method=='POST':
         if user:
             facility = json.loads(data['facility'])
-            property_data = {
-                'agent': user.id,
-                'description': data['description'],
-                'facility': facility,
-                'category': data['category'],
-                'price': data['price'],
-                'image1': data['file1'],
-                'image2': data['file2'],
-                'image3': data['file3'],
-                'image4': data['file4'],
-                'image5': data['file5'],
-                'image6': data['file6'],
-                'videofile': data['videofile'],
-                'details': data['details'],
-                'location': data['location'],
-                'state': data['state']
-            }
-            serializer = RealEstateSerializer(data=property_data)
-            
-
+            new_data['facility']=facility
+            serializer = RealEstateSerializer(data=new_data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -130,11 +113,10 @@ def add_property(request):
 @permission_classes([IsAuthenticated])
 def get_property_admin(request):
     email=request.data['email']
-    
     user=User.objects.get(email=email,is_service_provider=True,service='real estate')
     if user:
         bookings= RealEstateBooking.objects.filter(agent=user).order_by('-schedule_date')
-        apart = RealEstate.objects.filter(agent=user)
+        apart = RealEstate.objects.filter(agent=user).order_by('-date')
         bookings_serializer=RealEstateBookingSerializer(bookings,many=True)
         apart_serializer = RealEstateSerializer(apart,many=True)
         return Response({'orders':apart_serializer.data,'bookings':bookings_serializer.data})
@@ -155,17 +137,36 @@ def realestate_booking(request):
         data=request.data
         agent=User.objects.get(email=data['agent'])
         customer=User.objects.get(email=data['email'])
+        apartment=RealEstate.objects.get(agent=agent,description=data['apartment'],location=data['location'])
         if agent:
             booking_data={
                 'agent':agent,
                 'business_name':agent.business_name,
                 'customer_email':data['email'],
                 'customer_phone':'0' + str(customer.phone_number),
-                'apartment':data['apartment'],
+                'apartment':apartment,
                 'location':data['location'],
                 'state':data['state']
                 }
             serializer=RealEstateBooking.objects.create(**booking_data)
+
+            plaintext = template.loader.get_template('here/booking.txt')
+            htmltemp = template.loader.get_template('here/booking.html')
+
+            c={
+                'full_name':customer.get_full_name(),
+                'customer_email':customer.email,
+                'phone_number':'0'+ str(customer.phone_number),
+                'property':data['apartment'],
+                'location':data['location'],
+                'state':data['state'],
+            }
+            text_content = plaintext.render(c)
+            html_content = htmltemp.render(c)
+            subject = 'New Inspection Booked'  
+            msg = text_content
+            to = agent.email
+            send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
             return Response(status=status.HTTP_201_CREATED)
             
         else:
@@ -181,6 +182,11 @@ def realestate_booking(request):
             
         if data['deal']!='false':
             RealEstateBooking.objects.filter(pk=int(data['id'])).update(agreement_made=True)
+            description=RealEstateBooking.objects.get(pk=int(data['id'])).apartment
+            location=RealEstateBooking.objects.get(pk=int(data['id'])).location
+            RealEstate.objects.filter(location=location,description=description.description).update(already_sold=True)
+
+
         return Response(status=status.HTTP_201_CREATED)
         
 
@@ -217,7 +223,36 @@ def update_bookings(request):
     return Response(status=status.HTTP_201_CREATED)
     
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_charges(request):
+    packages= Charge.objects.all()
+    package_serializer = ChargeSerializer(packages,many=True)
+    return Response({'packages':package_serializer.data},status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def initiate_subscription(request):
+    data=request.data
+    user=User.objects.get(email=data['made_by'],is_service_provider=True,service='real estate')
+    if user:
+        sub_data={
+            'made_by':user,
+            'amount':data['amount'],
+            'bundle':data['bundle']
+        }
+        sub=Subscription.objects.create(**sub_data)
+        user.subscription_end_date=sub.end_date
+        user.save()
+        return Response(status=status.HTTP_201_CREATED)
     
+    return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+@api_view(['POST'])
+def contact_us(request):
+    data=request.data
+    Contactus.objects.create(**data)
+    return Response(status=status.HTTP_201_CREATED)
 

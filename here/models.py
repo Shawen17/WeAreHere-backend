@@ -5,9 +5,10 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager,MultiImageField
 from django.contrib.postgres.fields import JSONField 
-from datetime import datetime
+from datetime import datetime,timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import secrets
 from django.utils import timezone
 
 
@@ -118,6 +119,8 @@ class RealEstate(models.Model):
     state=models.CharField(max_length=50,blank=True)
     already_sold=models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ["agent", "description",'location']
 
     def __str__(self):
         return self.description
@@ -169,7 +172,7 @@ class RealEstateBooking(models.Model):
     business_name=models.CharField(max_length=100)
     customer_email=models.EmailField(max_length=100)
     customer_phone = models.CharField(max_length=20)
-    apartment= models.CharField(max_length=100)
+    apartment= models.ForeignKey(RealEstate,on_delete=models.CASCADE,null=True, blank=True)
     location=models.CharField(max_length=100)
     state=models.CharField(max_length=100)
     is_meeting_scheduled=models.BooleanField(default=False)
@@ -178,3 +181,48 @@ class RealEstateBooking(models.Model):
 
     def __str__(self):
         return self.customer_email
+
+
+class Subscription(models.Model):
+    ref = models.CharField( max_length=200,blank=True,null=True)
+    made_by= models.ForeignKey(User,on_delete=models.CASCADE)
+    bundle=models.CharField(max_length=50,default='basic')
+    amount=models.IntegerField()
+    start_date=models.DateTimeField(auto_now_add=True)
+    end_date=models.DateTimeField()
+    
+
+    def __str__(self):
+        return self.ref
+    
+    def save(self, *args, **kwargs):
+        query=Subscription.objects.filter(made_by=self.made_by)
+        if query.exists():
+            sub=query.latest('start_date')
+            self.end_date=sub.end_date + timedelta(days=30)
+        else:
+            self.end_date=datetime.now() + timedelta(days=30)
+        while not self.ref:
+            
+            ref = secrets.token_urlsafe(16)
+            object_with_similar_ref = Subscription.objects.filter(ref=ref)
+            if not object_with_similar_ref:
+                self.ref=ref
+        super().save(*args, **kwargs)
+
+class Charge(models.Model):
+    name= models.CharField(max_length=50)
+    charge= models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+
+class Contactus(models.Model):
+    full_name=models.CharField(max_length=100)
+    email=models.EmailField()
+    message=models.TextField()
+
+
+    def __str__(self):
+        return self.full_name

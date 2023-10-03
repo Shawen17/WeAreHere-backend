@@ -1,0 +1,18 @@
+{% autoescape off %} 
+
+Hi team,
+
+ Mr/Mrs {{ full_name }}, 
+
+with email {{ customer_email }} and phone number {{ phone_number }}
+
+has booked for to see the property {{ property }} at the location below;
+
+{{ location }}
+
+{{ state }}
+
+kindly follow up,
+
+  
+{% endautoescape %}

@@ -24,6 +24,10 @@ urlpatterns = [
     path('api/delete-property/<int:id>/', views.delete_property, name='delete_property' ),
     path('api/delete-properties/', views.delete_properties, name='delete_properties' ),
     path('api/update-bookings/', views.update_bookings, name='update_bookings' ),
+    path('api/charges/', views.get_charges, name='get_charges' ),
+    path('api/contact/', views.contact_us, name='contact_us' ),
+    path('api/initiate-payment/', views.initiate_subscription, name='initiate_subscription' ),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)    
