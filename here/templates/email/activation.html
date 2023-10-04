@@ -1,38 +1,27 @@
-{% load i18n %}
-{% block subject %}
-{% blocktrans %}Account activation on wearehere.com.ng{% endblocktrans %}
-{% endblock subject %}
-
-{% block text_body %}
-{% blocktrans %}
-You're receiving this email because you need to finish
-activation process on wearehere.com.ng.
-{% endblocktrans %}
-{% trans "Please go to the following page to activate account:" %} {{ protocol }}://www.localhost:3000/{{ url|safe }}
-{% trans "Thanks for using our site!" %}
-{% blocktrans %}
-The wearehere.com.ng team
-{% endblocktrans %}
-{% endblock text_body %}
-
-{% block html_body %}
+{% load i18n %} {% block subject %} {% blocktrans %}Account activation on
+wearehere.com.ng{% endblocktrans %} {% endblock subject %} {% block text_body %}
+{% blocktrans %} You're receiving this email because you need to finish
+activation process on wearehere.com.ng. {% endblocktrans %} {% trans "Please go
+to the following page to activate account:" %} {{ protocol
+}}://www.localhost:3000/{{ url|safe }} {% trans "Thanks for using our site!" %}
+{% blocktrans %} The wearehere.com.ng team {% endblocktrans %} {% endblock
+text_body %} {% block html_body %}
 <p>
-  {% blocktrans %}
-  You're receiving this email because you need to finish
-  activation process on wearehere.com.ng
-  {% endblocktrans %}
+  {% blocktrans %} You're receiving this email because you need to finish
+  activation process on wearehere.com.ng {% endblocktrans %}
 </p>
 
 <p>{% trans "Please go to the following page to activate account:" %}</p>
 <p>
-  <a href="{{ protocol }}://localhost:3000/{{ url|safe }}">
-    {{ protocol }}://localhost:3000/{{ url|safe }}
+  <a
+    href="https://fascinating-marzipan-f7a73a.netlify.app/{{ url|safe }}"
+    style="background-color: dodgerblue; color: white"
+  >
+    Activate
   </a>
 </p>
 
 <p>{% trans "Thanks for using our site!" %}</p>
 
-<p>{% blocktrans %}
-The wearehere.com.ng team
-{% endblocktrans %}</p>
+<p>{% blocktrans %} The wearehere.com.ng team {% endblocktrans %}</p>
 {% endblock html_body %}
