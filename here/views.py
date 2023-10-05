@@ -84,12 +84,15 @@ def add_property(request):
             facility = json.loads(data['facility'])
             new_data['facility']= facility
             new_data['agent']= user
-            serializer = RealEstateSerializer(data=new_data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            RealEstate.objects.create(**new_data)
+            return Response(status=status.HTTP_201_CREATED)
+            # serializer = RealEstateSerializer(data=new_data)
+            
+            # if serializer.is_valid():
+            #     serializer.save()
+            #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # else:
+            #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     elif request.method=='PUT':
