@@ -26,7 +26,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
 
 class RealEstateSerializer(serializers.ModelSerializer):
-    agent=serializers.CharField(source='agent.email',read_only=True)
+    agent=serializers.CharField(source='agent',read_only=True)
     image1=serializers.ImageField(required=False)
     image2=serializers.ImageField(required=False)
     image3=serializers.ImageField(required=False)
