@@ -82,8 +82,8 @@ def add_property(request):
     if request.method=='POST':
         if user:
             facility = json.loads(data['facility'])
-            new_data['facility']=facility
-            new_data['agent']=user
+            new_data['facility']= facility
+            new_data['agent']= user
             serializer = RealEstateSerializer(data=new_data)
             if serializer.is_valid():
                 serializer.save()
