@@ -43,7 +43,7 @@ class User(AbstractUser):
     username= None
     email=models.EmailField(_('email address'),unique=True)
     state=models.CharField(max_length=50,default='Lagos')
-    phone_number=models.IntegerField(default=int('08000000000'))
+    phone_number=models.BigIntegerField(default=int('08000000000'))
     subscription_end_date=models.DateTimeField(default=timezone.now)
     business_name=models.CharField(max_length=50,null=True,blank=True)
     business_address=models.TextField(null=True,blank=True)
