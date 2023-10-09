@@ -224,6 +224,10 @@ def update_bookings(request):
         bookings.update(is_meeting_scheduled=True)
     else:
         bookings.update(agreement_made=True)
+        for i in booking_ids:
+            description=RealEstateBooking.objects.get(pk=i).apartment
+            location=RealEstateBooking.objects.get(pk=i).location
+            RealEstate.objects.filter(location=location,description=description.description).update(already_sold=True)
     return Response(status=status.HTTP_201_CREATED)
     
 
