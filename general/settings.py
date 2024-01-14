@@ -182,6 +182,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ALLOWED_ORIGINS = [
+    'https://we-are-here-backend.vercel.app',
     'http://localhost:3000',
     'https://fascinating-marzipan-f7a73a.netlify.app',
     'https://www.wearehere.ng']
