@@ -80,12 +80,12 @@ WSGI_APPLICATION = 'general.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql',
-    'URL': os.environ.get('URL')
+    'URL': os.environ.get('URL'),
     'NAME': 'railway',
     'USER': 'postgres',
     'PASSWORD': os.environ.get('PASSWORD'),
     'HOST': os.environ.get('HOST'),
-    'PORT': 10036,
+    'PORT': 7091,
 }
 }
 
