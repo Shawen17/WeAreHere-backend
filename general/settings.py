@@ -8,8 +8,8 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
-SECRET_KEY = 'django-insecure-n50y)ymmpmubw(y=3#rw$3tqm(i*dowv6$r@d_v0=fle$!#0l@'
+SECRET_KEY= os.environ.get("SECRET_KEY", "some value if your key is not in the environment")
+# SECRET_KEY = 'django-insecure-n50y)ymmpmubw(y=3#rw$3tqm(i*dowv6$r@d_v0=fle$!#0l@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -190,7 +190,13 @@ CORS_ALLOWED_ORIGINS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_USE_SSL= True
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_HOST_USER")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 

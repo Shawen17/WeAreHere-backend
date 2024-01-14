@@ -1,12 +1,12 @@
 {% load i18n %}
 
 {% block subject %}
-  {% blocktrans %}Account activation on wearehere.com.ng{% endblocktrans %}
+  {% blocktrans %}Account activation on wearehere.ng{% endblocktrans %}
 {% endblock subject %}
 
 {% block text_body %}
   {% blocktrans %}
-    You're receiving this email because you need to finish activation process on wearehere.com.ng.
+    You're receiving this email because you need to finish activation process on wearehere.ng.
   {% endblocktrans %}
 
   {% trans "Please go to the following page to activate account:" %} {{ protocol }}://fascinating-marzipan-f7a73a.netlify.app/{{ url|safe }}
@@ -14,7 +14,7 @@
   {% trans "Thanks for using our site!" %}
 
   {% blocktrans %}
-    The wearehere.com.ng team
+    The wearehere.ng team
   {% endblocktrans %}
 {% endblock text_body %}
 
@@ -35,5 +35,5 @@
 
   <p>{% trans "Thanks for using our site!" %}</p>
 
-  <p>{% blocktrans %} The wearehere.com.ng team {% endblocktrans %}</p>
+  <p>{% blocktrans %} The wearehere.ng team {% endblocktrans %}</p>
 {% endblock html_body %}
