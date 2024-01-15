@@ -1,13 +1,10 @@
-from djoser.views import UserViewSet
-from rest_framework import viewsets
+from djoser.views import UserViewSet 
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from .models import User,Appointment,Transaction,RealEstate,RealEstateBooking, Charge, Subscription, Contactus
 from .serializers import UserCreateSerializer,AppointmentSerializer,RealEstateSerializer,RealEstateBookingSerializer, ChargeSerializer
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 from django import template
 from django.core.mail import send_mail
 from django.conf import settings
@@ -53,7 +50,7 @@ def make_appointment(request):
         text_content = plaintext.render(c)
         html_content = htmltemp.render(c)
         subject = 'New Appointment Booked'  
-        msg = text_content
+        msg = html_content
         #recipient mail correction
         to = user.email
         send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
@@ -86,13 +83,7 @@ def add_property(request):
             new_data['agent']= user
             RealEstate.objects.create(**new_data)
             return Response(status=status.HTTP_201_CREATED)
-            # serializer = RealEstateSerializer(data=new_data)
             
-            # if serializer.is_valid():
-            #     serializer.save()
-            #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-            # else:
-            #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     elif request.method=='PUT':
@@ -127,7 +118,7 @@ def get_property_admin(request):
     return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
-def get_properties(request):
+def get_properties():
     apartments = RealEstate.objects.filter(already_sold=False)
     apartments_serializer = RealEstateSerializer(apartments,many=True)
     
@@ -152,7 +143,7 @@ def realestate_booking(request):
                 'location':data['location'],
                 'state':data['state']
                 }
-            serializer=RealEstateBooking.objects.create(**booking_data)
+            RealEstateBooking.objects.create(**booking_data)
 
             plaintext = template.loader.get_template('here/booking.txt')
             htmltemp = template.loader.get_template('here/booking.html')
@@ -168,7 +159,7 @@ def realestate_booking(request):
             text_content = plaintext.render(c)
             html_content = htmltemp.render(c)
             subject = 'New Inspection Booked'  
-            msg = text_content
+            msg = html_content
             to = agent.email
             send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
             return Response(status=status.HTTP_201_CREATED)
@@ -190,14 +181,13 @@ def realestate_booking(request):
             location=RealEstateBooking.objects.get(pk=int(data['id'])).location
             RealEstate.objects.filter(location=location,description=description.description).update(already_sold=True)
 
-
         return Response(status=status.HTTP_201_CREATED)
         
 
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_property(request,id):
+def delete_property(id):
     RealEstate.objects.get(pk=id).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -233,7 +223,7 @@ def update_bookings(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_charges(request):
+def get_charges():
     packages= Charge.objects.all()
     package_serializer = ChargeSerializer(packages,many=True)
     return Response({'packages':package_serializer.data},status=status.HTTP_200_OK)
