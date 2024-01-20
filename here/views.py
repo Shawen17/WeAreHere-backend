@@ -118,7 +118,7 @@ def get_property_admin(request):
     return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
-def get_properties():
+def get_properties(request):
     apartments = RealEstate.objects.filter(already_sold=False)
     apartments_serializer = RealEstateSerializer(apartments,many=True)
     
@@ -187,7 +187,7 @@ def realestate_booking(request):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_property(id):
+def delete_property(request,id):
     RealEstate.objects.get(pk=id).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -223,7 +223,7 @@ def update_bookings(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_charges():
+def get_charges(request):
     packages= Charge.objects.all()
     package_serializer = ChargeSerializer(packages,many=True)
     return Response({'packages':package_serializer.data},status=status.HTTP_200_OK)
