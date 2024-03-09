@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY= os.environ.get("SECRET_KEY", "some value if your key is not in the environment")
-# SECRET_KEY = 'django-insecure-n50y)ymmpmubw(y=3#rw$3tqm(i*dowv6$r@d_v0=fle$!#0l@'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -174,6 +174,25 @@ STATIC_URL = 'static/'
 # STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
 
 # STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'shawenmedia'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl" : "max-age=86400"}
+AWS_DEFAULT_ACL = 'public-read'
+
+
+AWS_LOCATION = 'staticfiles'
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+DEFAULT_FILE_STORAGE = 'general.storages.MediaStore'
+
+# STATIC_URL = 'static/'
+MEDIA_DIR = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
