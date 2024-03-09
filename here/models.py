@@ -10,6 +10,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import secrets
 from django.utils import timezone
+from  django.conf import settings
 
 
 services=(
@@ -105,7 +106,7 @@ class RealEstate(models.Model):
     description=models.CharField(max_length=70,null=True,blank=True)
     facility=models.JSONField(default=dict,null=True)
     price=models.IntegerField()
-    image1 = models.ImageField(upload_to='here/images',blank=True, null=True)
+    image1 = models.ImageField(upload_to='',blank=True, null=True)
     image2 = models.ImageField(upload_to='here/images',blank=True, null=True)
     image3 = models.ImageField(upload_to='here/images',blank=True, null=True)
     image4 = models.ImageField(upload_to='here/images',blank=True, null=True)
