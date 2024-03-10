@@ -74,7 +74,8 @@ class User(AbstractUser):
 
         
 
-
+def upload_image_to(instance, filename):
+    return f"real-estate/{filename}"
    
 
 
@@ -90,15 +91,15 @@ class ServiceCharge(models.Model):
 
 class RealEstateImage(models.Model):
     # description = models.OneToOneField(RealEstate,on_delete=models.CASCADE)
-    image1 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image2 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image3 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image4 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image5 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image6 = models.ImageField(upload_to='here/images',blank=True, null=True)
+    image1 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image2 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image3 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image4 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image5 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image6 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
 
-    def __str__(self):
-        return self.description.description
+    # def __str__(self):
+    #     return self.description.description
 
 
 class RealEstate(models.Model):
@@ -106,13 +107,13 @@ class RealEstate(models.Model):
     description=models.CharField(max_length=70,null=True,blank=True)
     facility=models.JSONField(default=dict,null=True)
     price=models.IntegerField()
-    image1 = models.ImageField(upload_to='',blank=True, null=True)
-    image2 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image3 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image4 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image5 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    image6 = models.ImageField(upload_to='here/images',blank=True, null=True)
-    videofile=models.FileField(upload_to='here/videos',blank=True, null=True)
+    image1 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image2 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image3 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image4 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image5 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    image6 = models.ImageField(upload_to=upload_image_to,blank=True, null=True)
+    videofile=models.FileField(upload_to=upload_image_to,blank=True, null=True)
     details=models.TextField()
     location=models.TextField()
     date=models.DateTimeField(default=timezone.now)

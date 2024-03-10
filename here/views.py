@@ -9,6 +9,8 @@ from django import template
 from django.core.mail import send_mail
 from django.conf import settings
 import json
+import boto3
+import os
 
 
 class UserViewSet(UserViewSet):

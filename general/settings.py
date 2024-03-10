@@ -3,12 +3,16 @@
 from pathlib import Path
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY= os.environ.get("SECRET_KEY", "some value if your key is not in the environment")
+SECRET_KEY = os.getenv("SECRET_KEY", "some value if your key is not in the environment")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -83,8 +87,8 @@ DATABASES = {
     'URL': os.environ.get('URL'),
     'NAME': 'railway',
     'USER': 'postgres',
-    'PASSWORD': os.environ.get('PASSWORD'),
-    'HOST': os.environ.get('HOST'),
+    'PASSWORD': os.getenv('PASSWORD'),
+    'HOST': os.getenv('HOST'),
     'PORT': 10036,
 }
 }
@@ -169,7 +173,7 @@ USE_TZ = True
 
 
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
 
@@ -180,11 +184,9 @@ AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'shawenmedia'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {"CacheControl" : "max-age=86400"}
-AWS_DEFAULT_ACL = 'public-read'
-
-
+# AWS_DEFAULT_ACL = 'public-read-write'
 AWS_LOCATION = 'staticfiles'
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'staticfiles')]
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
@@ -194,7 +196,7 @@ DEFAULT_FILE_STORAGE = 'general.storages.MediaStore'
 MEDIA_DIR = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+# STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -210,12 +212,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_USE_SSL= True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_HOST_USER")
+DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 
