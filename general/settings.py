@@ -139,17 +139,17 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL='here.User'
 
 DJOSER = {
-    'EMAIL': {
-            'activation': 'here.email.ActivationEmail'
-    },
+    # 'EMAIL': {
+    #         'activation': 'here.email.ActivationEmail'
+    # },
     'LOGIN_FIELD':'email',
     'USER_CREATE_PASSWORD_RETYPE':True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION':True,
-    'SEND_CONFIRMATION_EMAIL':True,
+    'SEND_CONFIRMATION_EMAIL':False,
     'SET_PASSWORD_RETYPE':True,
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    # 'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {
         'user_create':'here.serializers.UserCreateSerializer',
         'user':'here.serializers.UserSerializer',
