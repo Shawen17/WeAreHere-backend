@@ -164,7 +164,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = "static/"
+# STATIC_URL = "static/"
 
 # STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
 
@@ -178,15 +178,15 @@ AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
 # AWS_DEFAULT_ACL = 'public-read-write'
 AWS_LOCATION = "staticfiles"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-# STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-# DEFAULT_FILE_STORAGE = "general.storages.MediaStore"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+DEFAULT_FILE_STORAGE = "general.storages.MediaStore"
 
 # STATIC_URL = 'static/'
 MEDIA_DIR = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 MEDIA_URL = "/media/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
